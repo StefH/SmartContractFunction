@@ -1,5 +1,8 @@
-﻿namespace SmartContractAzureFunctionApp.Models
+﻿using JetBrains.Annotations;
+
+namespace SmartContractAzureFunctionApp.Models
 {
+    [PublicAPI]
     public class SmartContractFunctionRequest
     {
         public string Endpoint { get; set; }

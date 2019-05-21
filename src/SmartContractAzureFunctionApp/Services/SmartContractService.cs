@@ -1,5 +1,4 @@
 ﻿using AzureFunctions.Common.Validation;
-using JetBrains.Annotations;
 using Nethereum.Geth;
 using Nethereum.Hex.HexTypes;
 using Nethereum.Web3.Accounts;
@@ -14,7 +13,7 @@ namespace SmartContractAzureFunctionApp.Services
     {
         private static int TimeoutInSeconds = 60;
 
-        public async Task<SmartContractFunctionResponse> QueryFunctionAsync([NotNull] SmartContractFunctionRequest request)
+        public async Task<SmartContractFunctionResponse> QueryFunctionAsync(SmartContractFunctionRequest request)
         {
             Guard.NotNull(request, nameof(request));
 
@@ -35,7 +34,7 @@ namespace SmartContractAzureFunctionApp.Services
             };
         }
 
-        public async Task<SmartContractFunctionResponse> ExecuteFunctionAsync([NotNull] SmartContractFunctionRequest request)
+        public async Task<SmartContractFunctionResponse> ExecuteFunctionAsync(SmartContractFunctionRequest request)
         {
             Guard.NotNull(request, nameof(request));
 

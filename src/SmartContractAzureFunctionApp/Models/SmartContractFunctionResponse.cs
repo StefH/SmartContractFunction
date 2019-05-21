@@ -1,7 +1,8 @@
-﻿using Nethereum.Hex.HexTypes;
+﻿using JetBrains.Annotations;
 
 namespace SmartContractAzureFunctionApp.Models
 {
+    [PublicAPI]
     public class SmartContractFunctionResponse
     {
         public ulong EstimatedGas { get; set; }

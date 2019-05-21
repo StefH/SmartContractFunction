@@ -5,8 +5,8 @@ using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using SmartContractAzureFunctionApp.Models;
-using System.Threading.Tasks;
 using SmartContractAzureFunctionApp.Services;
+using System.Threading.Tasks;
 using Willezone.Azure.WebJobs.Extensions.DependencyInjection;
 
 namespace SmartContractAzureFunctionApp
@@ -24,6 +24,8 @@ namespace SmartContractAzureFunctionApp
             [Inject] ISmartContractService service,
             ILogger logger)
         {
+            logger.LogInformation("RunQueryFunctionAsync");
+
             string body = await req.ReadAsStringAsync();
             var request = JsonConvert.DeserializeObject<SmartContractFunctionRequest>(body);
 
@@ -38,6 +40,8 @@ namespace SmartContractAzureFunctionApp
             [Inject] ISmartContractService service,
             ILogger logger)
         {
+            logger.LogInformation("ExecuteSmartContractFunction");
+
             string body = await req.ReadAsStringAsync();
             var request = JsonConvert.DeserializeObject<SmartContractFunctionRequest>(body);
 
