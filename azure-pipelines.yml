@@ -1,0 +1,38 @@
+pool:
+  vmImage: 'VS2017-Win2016'
+
+variables:
+  buildConfiguration: 'Release'
+  buildProjects: '**/src/SmartContractAzureFunctionApp/*.csproj'
+  #testProjects: '**/test/SmartContractAzureFunctionApp.Tests/*.csproj'
+
+steps:
+- task: DotNetCoreCLI@2
+  displayName: Build
+  inputs:
+    command: build
+    arguments: /p:Configuration=$(buildConfiguration)
+    projects: $(buildProjects)
+
+# - task: DotNetCoreCLI@2
+#   displayName: Test
+#   inputs:
+#     command: test
+#     arguments: /p:Configuration=$(buildConfiguration)
+#     projects: $(testProjects)
+
+- task: DotNetCoreCLI@2
+  displayName: Publish
+  condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest')) # Do not run for PullRequests
+  inputs:
+    command: publish
+    projects: $(buildProjects)
+    publishWebProjects: False
+    arguments: '--configuration $(BuildConfiguration) --output $(Build.ArtifactStagingDirectory)'
+    zipAfterPublish: True
+    
+- task: PublishBuildArtifacts@1
+  displayName: Publish Artifact
+  condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest')) # Do not run for PullRequests
+  inputs:
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
