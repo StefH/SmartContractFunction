@@ -3,13 +3,13 @@
 namespace SmartContractAzureFunctionApp.Models
 {
     [PublicAPI]
-    public class SmartContractFunctionResponse
+    public class SmartContractDeployResponse
     {
         public ulong GasEstimated { get; set; }
 
-        public ulong? GasUsed { get; set; }
+        public ulong GasUsed { get; set; }
 
-        public object Response { get; set; }
+        public string ContractAddress { get; set; }
 
         public string TransactionHash { get; set; }
     }

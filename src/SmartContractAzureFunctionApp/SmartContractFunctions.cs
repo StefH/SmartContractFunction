@@ -18,6 +18,22 @@ namespace SmartContractAzureFunctionApp
         /// </summary>
         private static readonly JsonSerializerSettings JsonSerializerSettings = new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore };
 
+        [FunctionName("DeployContractFunction")]
+        public static async Task<IActionResult> RunDeployContractAsync(
+            [HttpTrigger(AuthorizationLevel.Function, "post")]HttpRequest req,
+            [Inject] ISmartContractService service,
+            ILogger logger)
+        {
+            logger.LogInformation("RunDeployContractAsync");
+
+            string body = await req.ReadAsStringAsync();
+            var request = JsonConvert.DeserializeObject<SmartContractDeployRequest>(body);
+
+            var result = await service.DeployContractAsync(request);
+
+            return new JsonResult(result, JsonSerializerSettings);
+        }
+
         [FunctionName("QuerySmartContractFunction")]
         public static async Task<IActionResult> RunQueryFunctionAsync(
             [HttpTrigger(AuthorizationLevel.Function, "post")]HttpRequest req,
