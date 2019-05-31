@@ -6,6 +6,7 @@ using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using SmartContractAzureFunctionApp.Models;
 using SmartContractAzureFunctionApp.Services;
+using System;
 using System.Threading.Tasks;
 using Willezone.Azure.WebJobs.Extensions.DependencyInjection;
 
@@ -24,14 +25,22 @@ namespace SmartContractAzureFunctionApp
             [Inject] ISmartContractService service,
             ILogger logger)
         {
-            logger.LogInformation("RunDeployContractAsync");
+            logger.LogInformation("RunDeployContract");
 
             string body = await req.ReadAsStringAsync();
             var request = JsonConvert.DeserializeObject<SmartContractDeployRequest>(body);
 
-            var result = await service.DeployContractAsync(request);
+            try
+            {
+                var result = await service.DeployContractAsync(request);
 
-            return new JsonResult(result, JsonSerializerSettings);
+                return new JsonResult(result, JsonSerializerSettings);
+            }
+            catch (Exception exception)
+            {
+                logger.LogError(exception, "RunDeployContract failed");
+                return new JsonResult(new { exception.Message }, JsonSerializerSettings);
+            }
         }
 
         [FunctionName("QuerySmartContractFunction")]
@@ -45,9 +54,17 @@ namespace SmartContractAzureFunctionApp
             string body = await req.ReadAsStringAsync();
             var request = JsonConvert.DeserializeObject<SmartContractFunctionRequest>(body);
 
-            var result = await service.QueryFunctionAsync(request);
+            try
+            {
+                var result = await service.QueryFunctionAsync(request);
 
-            return new JsonResult(result, JsonSerializerSettings);
+                return new JsonResult(result, JsonSerializerSettings);
+            }
+            catch (Exception exception)
+            {
+                logger.LogError(exception, "QuerySmartContractFunction failed");
+                return new JsonResult(new { exception.Message }, JsonSerializerSettings);
+            }
         }
 
         [FunctionName("ExecuteSmartContractFunction")]
@@ -61,9 +78,17 @@ namespace SmartContractAzureFunctionApp
             string body = await req.ReadAsStringAsync();
             var request = JsonConvert.DeserializeObject<SmartContractFunctionRequest>(body);
 
-            var result = await service.ExecuteFunctionAsync(request);
+            try
+            {
+                var result = await service.ExecuteFunctionAsync(request);
 
-            return new JsonResult(result, JsonSerializerSettings);
+                return new JsonResult(result, JsonSerializerSettings);
+            }
+            catch (Exception exception)
+            {
+                logger.LogError(exception, "ExecuteSmartContractFunction failed");
+                return new JsonResult(new { exception.Message }, JsonSerializerSettings);
+            }
         }
     }
 }
