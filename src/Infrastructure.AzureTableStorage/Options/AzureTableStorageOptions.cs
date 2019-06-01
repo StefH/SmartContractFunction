@@ -6,8 +6,12 @@ namespace Infrastructure.AzureTableStorage.Options
     {
         [Required]
         [MinLength(0)]
-        public string ConnectionString { get; set; }
-        
+        public string SASToken { get; set; }
+
+        [Required]
+        [MinLength(0)]
+        public string BaseUri { get; set; }
+
         [Required]
         [MinLength(0)]
         public string SmartContractsTableName { get; set; }
