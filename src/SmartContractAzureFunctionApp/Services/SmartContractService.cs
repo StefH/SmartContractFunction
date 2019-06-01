@@ -1,4 +1,8 @@
-﻿using AzureFunctions.Common.Validation;
+﻿using AzureFunctions.Common.Extensions;
+using AzureFunctions.Common.Validation;
+using Infrastructure.AzureTableStorage.Models;
+using Infrastructure.AzureTableStorage.Services;
+using JetBrains.Annotations;
 using Nethereum.Contracts;
 using Nethereum.Geth;
 using Nethereum.Hex.HexTypes;
@@ -14,6 +18,14 @@ namespace SmartContractAzureFunctionApp.Services
     internal class SmartContractService : ISmartContractService
     {
         private static int TimeoutInSeconds = 60;
+        private readonly IAzureTablesService _azure;
+
+        public SmartContractService([NotNull] IAzureTablesService azure)
+        {
+            Guard.NotNull(azure, nameof(azure));
+
+            _azure = azure;
+        }
 
         public async Task<SmartContractDeployResponse> DeployContractAsync(SmartContractDeployRequest request)
         {
@@ -28,6 +40,19 @@ namespace SmartContractAzureFunctionApp.Services
             var receipt = await web3.Eth.DeployContract.SendRequestAndWaitForReceiptAsync(
                 request.ContractABI, request.ContractByteCode,
                 request.FromAddress, gas, null, contractParameters);
+
+            var entity = new SmartContractEntity
+            {
+                Network = GetNetwork(request.Endpoint),
+                Address = receipt.ContractAddress,
+                NetworkEndpoint = request.Endpoint,
+                ABI = request.ContractABI,
+                ByteCode = request.ContractByteCode,
+                FromAddress = request.FromAddress,
+                GasUsed = (long)receipt.GasUsed.Value,
+                TransactionHash = receipt.TransactionHash
+            };
+            await _azure.StoreAsync(entity);
 
             return new SmartContractDeployResponse
             {
@@ -44,7 +69,9 @@ namespace SmartContractAzureFunctionApp.Services
 
             var web3 = GetWeb3(request.CallerPrivateKey, request.Endpoint);
 
-            var contract = web3.Eth.GetContract(request.ContractABI, request.ContractAddress);
+            string abi = await GetContractABIAsync(request);
+
+            var contract = web3.Eth.GetContract(abi, request.ContractAddress);
 
             var function = contract.GetFunction(request.FunctionName);
 
@@ -67,7 +94,9 @@ namespace SmartContractAzureFunctionApp.Services
 
             var web3 = GetWeb3(request.CallerPrivateKey, request.Endpoint);
 
-            var contract = web3.Eth.GetContract(request.ContractABI, request.ContractAddress);
+            string abi = await GetContractABIAsync(request);
+
+            var contract = web3.Eth.GetContract(abi, request.ContractAddress);
 
             var function = contract.GetFunction(request.FunctionName);
 
@@ -106,6 +135,23 @@ namespace SmartContractAzureFunctionApp.Services
             var account = new Account(privateKey);
 
             return new Web3Geth(account, endpoint);
+        }
+
+        private static string GetNetwork(string endpoint)
+        {
+            if (endpoint.Contains("ropsten", StringComparison.OrdinalIgnoreCase))
+            {
+                return "Ropsten";
+            }
+
+            return "Unknown";
+        }
+
+        private async Task<string> GetContractABIAsync(SmartContractFunctionRequest request)
+        {
+            string network = GetNetwork(request.Endpoint);
+            var entity = await _azure.GetSmartContractAsync(network, request.ContractAddress);
+            return entity != null ? entity.ABI : request.ContractABI;
         }
     }
 }

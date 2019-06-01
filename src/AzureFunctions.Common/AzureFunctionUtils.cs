@@ -8,5 +8,11 @@ namespace AzureFunctions.Common
         {
             return !string.IsNullOrEmpty(Environment.GetEnvironmentVariable("WEBSITE_INSTANCE_ID"));
         }
+
+        // https://github.com/Azure/azure-webjobs-sdk/issues/1817
+        public static string GetAzureWebJobsScriptRoot()
+        {
+            return Environment.GetEnvironmentVariable("AzureWebJobsScriptRoot");
+        }
     }
 }

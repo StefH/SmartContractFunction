@@ -17,6 +17,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AzureFunctions.Common", "sr
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SmartContractAzureFunctionApp", "src\SmartContractAzureFunctionApp\SmartContractAzureFunctionApp.csproj", "{B6943A3C-9130-40C2-A207-D34615DFE779}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infrastructure.AzureTableStorage", "src\Infrastructure.AzureTableStorage\Infrastructure.AzureTableStorage.csproj", "{CEB3FF40-99FD-4134-B060-31312AAAB501}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -31,6 +33,10 @@ Global
 		{B6943A3C-9130-40C2-A207-D34615DFE779}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B6943A3C-9130-40C2-A207-D34615DFE779}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B6943A3C-9130-40C2-A207-D34615DFE779}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CEB3FF40-99FD-4134-B060-31312AAAB501}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CEB3FF40-99FD-4134-B060-31312AAAB501}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CEB3FF40-99FD-4134-B060-31312AAAB501}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CEB3FF40-99FD-4134-B060-31312AAAB501}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -38,6 +44,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{35E8E84A-EF82-46D1-9365-61BB6F5A8AE0} = {7517544A-DFF7-4B76-BE9F-8C05D286B919}
 		{B6943A3C-9130-40C2-A207-D34615DFE779} = {7517544A-DFF7-4B76-BE9F-8C05D286B919}
+		{CEB3FF40-99FD-4134-B060-31312AAAB501} = {7517544A-DFF7-4B76-BE9F-8C05D286B919}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {540E3805-D427-429D-B775-853492EDE6A1}
