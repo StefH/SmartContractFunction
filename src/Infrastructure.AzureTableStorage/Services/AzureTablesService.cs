@@ -4,6 +4,7 @@ using Infrastructure.AzureTableStorage.Options;
 using JetBrains.Annotations;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Auth;
 using Microsoft.WindowsAzure.Storage.Table;
 using System;
@@ -29,10 +30,18 @@ namespace Infrastructure.AzureTableStorage.Services
 
             _logger = logger;
 
-            var storageCredentials = new StorageCredentials(options.Value.SASToken);
+            CloudTableClient client;
+            if (!string.IsNullOrEmpty(options.Value.ConnectionString))
+            {
+                client = CloudStorageAccount.Parse(options.Value.ConnectionString).CreateCloudTableClient();
+            }
+            else
+            {
+                var storageCredentials = new StorageCredentials(options.Value.SASToken);
 
-            // Create CloudTableClient using the BaseUri and the StorageCredentials
-            var client = new CloudTableClient(new Uri(options.Value.BaseUri), storageCredentials);
+                // Create CloudTableClient using the BaseUri and the StorageCredentials
+                client = new CloudTableClient(new Uri(options.Value.BaseUri), storageCredentials);
+            }
 
             // Create table set(s)
             _smartContractTable = (options.Value.SmartContractsTableName, new TableSet<SmartContractEntity>(client, options.Value.SmartContractsTableName));

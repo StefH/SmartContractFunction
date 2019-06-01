@@ -5,6 +5,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Factories\AzureTablesServiceFactory.cs" />
+    <Compile Remove="Factories\IAzureTablesServiceFactory.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="JetBrains.Annotations" Version="2018.3.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="2.1.1" />
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="2.1.1" />
@@ -17,6 +22,10 @@
 
   <ItemGroup>
     <ProjectReference Include="..\AzureFunctions.Common\AzureFunctions.Common.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Factories\" />
   </ItemGroup>
 
 </Project>

@@ -7,11 +7,13 @@ An Azure Function to call Ethereum Smart Contracts
 | ***Quality*** | &nbsp; |
 | &nbsp;&nbsp;**Build Azure** | [![Build Status Azure](https://stef.visualstudio.com/SmartContractFunction/_apis/build/status/SmartContractFunction)](https://stef.visualstudio.com/SmartContractFunction/_build/latest?definitionId=23) |
 
+This solution uses Azure Table Storage to store the details from the Deployed Smart Contracts.
+
 ## Functionality
 
 ### DeploySmartContract
 
-Use this to *deploy* a new Smart Contract.
+Use this to *deploy* a new Smart Contract to the Ethereum Blockchain.
 
 #### Example
 Do a **POST** request with this body to endpoint <http://localhost:7071/api/DeploySmartContract>
@@ -26,8 +28,9 @@ Do a **POST** request with this body to endpoint <http://localhost:7071/api/Depl
     "FromAddress": "0x***"
 }
 ```
+After this call, the Smart Contract details (Address, ABI, ByteCode, ...) are stored in Azure Table Storage, in the table `SmartContracts` (specified in *local.settings.json* or in the *Environment Settings*)
 
-### QuerySmartContractFunction
+### QuerySmartContractFunction (including the ABI)
 
 Use this to call a *normal* function.
 
@@ -38,7 +41,6 @@ To call a function without parameters:
 ``` js
 {
     "Endpoint": "https://ropsten.infura.io/v3/***",
-    "ContractABI": "[{\"constant\":true,\"inputs\":[],\"name\":\"getVersion\",\"outputs\":[{\"name\":\"version\",\"type\":\"int256\"},{\"name\":\"description\",\"type\":\"string\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"name\":\"value\",\"type\":\"uint256\"}],\"name\":\"setNumber\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"name\":\"value\",\"type\":\"string\"}],\"name\":\"setString\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"getString\",\"outputs\":[{\"name\":\"\",\"type\":\"string\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[{\"name\":\"number1\",\"type\":\"uint256\"},{\"name\":\"number2\",\"type\":\"uint256\"}],\"name\":\"addNumbers\",\"outputs\":[{\"name\":\"\",\"type\":\"uint256\"}],\"payable\":false,\"stateMutability\":\"pure\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"getNumber\",\"outputs\":[{\"name\":\"\",\"type\":\"uint256\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"name\":\"version\",\"type\":\"int256\"},{\"name\":\"description\",\"type\":\"string\"}],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"}]",
     "ContractAddress": "0x***",
     "CallerPrivateKey": "***",
     "FunctionName": "getString",
@@ -50,7 +52,6 @@ To call a function with parameters:
 ``` js
 {
     "Endpoint": "https://ropsten.infura.io/v3/***",
-    "ContractABI": "[{\"constant\":true,\"inputs\":[],\"name\":\"getVersion\",\"outputs\":[{\"name\":\"version\",\"type\":\"int256\"},{\"name\":\"description\",\"type\":\"string\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"name\":\"value\",\"type\":\"uint256\"}],\"name\":\"setNumber\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"name\":\"value\",\"type\":\"string\"}],\"name\":\"setString\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"getString\",\"outputs\":[{\"name\":\"\",\"type\":\"string\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[{\"name\":\"number1\",\"type\":\"uint256\"},{\"name\":\"number2\",\"type\":\"uint256\"}],\"name\":\"addNumbers\",\"outputs\":[{\"name\":\"\",\"type\":\"uint256\"}],\"payable\":false,\"stateMutability\":\"pure\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"getNumber\",\"outputs\":[{\"name\":\"\",\"type\":\"uint256\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"name\":\"version\",\"type\":\"int256\"},{\"name\":\"description\",\"type\":\"string\"}],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"}]",
     "ContractAddress": "0x***",
     "CallerPrivateKey": "***",
     "FromAddress": "0x**",
@@ -58,6 +59,7 @@ To call a function with parameters:
     "FunctionParameters": [1, 4]
 }
 ```
+Note that the `ContractABI` can be specified, but this is not required because this can be retrieved from Azure Table Storage. 
 
 ### ExecuteSmartContractFunction
 
@@ -70,7 +72,6 @@ To call a function with parameters:
 ``` js
 {
     "Endpoint": "https://ropsten.infura.io/v3/***",
-    "ContractABI": "[{\"constant\":true,\"inputs\":[],\"name\":\"getVersion\",\"outputs\":[{\"name\":\"version\",\"type\":\"int256\"},{\"name\":\"description\",\"type\":\"string\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"name\":\"value\",\"type\":\"uint256\"}],\"name\":\"setNumber\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"name\":\"value\",\"type\":\"string\"}],\"name\":\"setString\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"getString\",\"outputs\":[{\"name\":\"\",\"type\":\"string\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[{\"name\":\"number1\",\"type\":\"uint256\"},{\"name\":\"number2\",\"type\":\"uint256\"}],\"name\":\"addNumbers\",\"outputs\":[{\"name\":\"\",\"type\":\"uint256\"}],\"payable\":false,\"stateMutability\":\"pure\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"getNumber\",\"outputs\":[{\"name\":\"\",\"type\":\"uint256\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"name\":\"version\",\"type\":\"int256\"},{\"name\":\"description\",\"type\":\"string\"}],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"}]",
     "ContractAddress": "0x***",
     "CallerPrivateKey": "***",
     "FunctionName": "setString",
@@ -78,3 +79,10 @@ To call a function with parameters:
     "FunctionParameters": ["stef-1234"]
 }
 ```
+Note that the `ContractABI` can be specified, but this is not required because this can be retrieved from Azure Table Storage.
+
+
+## Azure Table Storage
+Just create a table named `SmartContracts` in your account. When deploying a new Smart Contract, this will be stored and looks like this:
+![AzureTableStorage SmartContract Details](./resources/AzureTableStorage_SmartContract_Details.png "AzureTableStorage SmartContract Details")
+

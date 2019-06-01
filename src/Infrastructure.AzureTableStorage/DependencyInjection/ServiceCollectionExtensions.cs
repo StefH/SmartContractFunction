@@ -27,6 +27,7 @@ namespace Infrastructure.AzureTableStorage.DependencyInjection
 
         private static void AddServices(this IServiceCollection services)
         {
+            // services.AddSingleton<IAzureTablesServiceFactory, AzureTablesServiceFactory>();
             services.AddScoped<IAzureTablesService, AzureTablesService>();
         }
     }

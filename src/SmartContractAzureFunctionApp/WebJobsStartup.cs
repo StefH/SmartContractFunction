@@ -10,6 +10,7 @@ using Microsoft.Extensions.Logging;
 using SmartContractAzureFunctionApp;
 using SmartContractAzureFunctionApp.Services;
 using System;
+using SmartContractAzureFunctionApp.Options;
 using Willezone.Azure.WebJobs.Extensions.DependencyInjection;
 
 [assembly: WebJobsStartup(typeof(Startup))]
@@ -49,6 +50,7 @@ namespace SmartContractAzureFunctionApp
             services.AddAzureTableStorage();
 
             // Configure
+            services.Configure<FunctionAppOptions>(configuration.GetSection("FunctionAppOptions"));
             services.Configure<AzureTableStorageOptions>(configuration.GetSection("AzureTableStorageOptions"));
 
             return services.BuildServiceProvider();
