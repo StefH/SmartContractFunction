@@ -14,7 +14,7 @@ namespace Infrastructure.AzureTableStorage.Services
 {
     internal partial class AzureTablesService : IAzureTablesService
     {
-        private readonly ILogger _logger;
+        private readonly ILogger<AzureTablesService> _logger;
 
         private readonly (string Name, ITableSet<SmartContractEntity> Set) _smartContractTable;
 
@@ -23,7 +23,7 @@ namespace Infrastructure.AzureTableStorage.Services
         /// </summary>
         /// <param name="options">The options.</param>
         /// <param name="logger">The logger.</param>
-        public AzureTablesService([NotNull] IOptions<AzureTableStorageOptions> options, [NotNull] ILogger logger)
+        public AzureTablesService([NotNull] IOptions<AzureTableStorageOptions> options, [NotNull] ILogger<AzureTablesService> logger)
         {
             Guard.NotNull(options, nameof(options));
             Guard.NotNull(logger, nameof(logger));
