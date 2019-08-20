@@ -14,7 +14,7 @@ namespace Infrastructure.AzureTableStorage.Services
             _logger.LogInformation("Inserting SmartContractEntity with PartitionKey '{PartitionKey}' and RowKey '{RowKey}' into Azure Table '{Table}'",
                 entity.Network, entity.Address, _smartContractTable.Name);
 
-            return await _smartContractTable.Set.AddAsync(entity) != null;
+            return await _smartContractTable.Set.AddAsync(entity).ConfigureAwait(false) != null;
         }
     }
 }

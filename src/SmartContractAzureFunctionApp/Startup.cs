@@ -6,6 +6,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using SmartContractAzureFunctionApp.Options;
 using SmartContractAzureFunctionApp.Services;
+using YellowCounter.AzureFunctions.AspNetConfiguration;
 
 // https://docs.microsoft.com/en-us/azure/azure-functions/functions-dotnet-dependency-injection
 // https://stackoverflow.com/questions/54876798/how-can-i-use-the-new-di-to-inject-an-ilogger-into-an-azure-function-using-iwebj
@@ -16,16 +17,18 @@ namespace SmartContractAzureFunctionApp
     {
         public override void Configure(IFunctionsHostBuilder builder)
         {
-            var configBuilder = new ConfigurationBuilder();
+            builder.UseAspNetConfiguration();
 
-            string scriptRoot = AzureFunctionUtils.GetAzureWebJobsScriptRoot();
-            if (!string.IsNullOrEmpty(scriptRoot))
-            {
-                configBuilder.SetBasePath(scriptRoot).AddJsonFile("local.settings.json", optional: false, reloadOnChange: false);
-            }
-            configBuilder.AddEnvironmentVariables();
+            //var configBuilder = new ConfigurationBuilder();
 
-            var configuration = configBuilder.Build();
+            //string scriptRoot = AzureFunctionUtils.GetAzureWebJobsScriptRoot();
+            //if (!string.IsNullOrEmpty(scriptRoot))
+            //{
+            //    configBuilder.SetBasePath(scriptRoot).AddJsonFile("local.settings.json", optional: false, reloadOnChange: false);
+            //}
+            //configBuilder.AddEnvironmentVariables();
+
+            var configuration = builder.GetConfiguration();
 
             // Add Services
             builder.Services.AddScoped<ISmartContractService, SmartContractService>();

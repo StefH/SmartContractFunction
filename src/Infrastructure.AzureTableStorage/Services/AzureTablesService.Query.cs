@@ -15,7 +15,7 @@ namespace Infrastructure.AzureTableStorage.Services
 
             _logger.LogInformation("Querying Table '{table}' for Network '{network}' and Address '{address}'", _smartContractTable.Name, network, address);
 
-            return await _smartContractTable.Set.FirstOrDefaultAsync(sc => sc.Network == network && sc.Address == address);
+            return await _smartContractTable.Set.FirstOrDefaultAsync(sc => sc.Network == network && sc.Address == address).ConfigureAwait(false);
         }
     }
 }
