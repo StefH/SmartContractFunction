@@ -1,7 +1,16 @@
 {
+  "FunctionAppOptions": {
+    "UseAzureTableStorage": true
+  },
   "IsEncrypted": false,
   "Values": {
     "AzureWebJobsStorage": "UseDevelopmentStorage=true",
     "FUNCTIONS_WORKER_RUNTIME": "dotnet"
+  },
+  "AzureTableStorageOptions": {
+    "ConnectionString": "UseDevelopmentStorage=true;",
+    "SASToken": "?sv=2018-03-28&si=SmartContracts-local-access&tn=smartcontracts&sig=QOi5jZsbtTz4WoyNRA4LQeUd%2B32NoFjkiFVVwFRk4X8%3D",
+    "BaseUri": "http://127.0.0.1:10002/devstoreaccount1",
+    "SmartContractsTableName": "SmartContracts"
   }
 }

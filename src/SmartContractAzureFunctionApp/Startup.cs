@@ -17,18 +17,23 @@ namespace SmartContractAzureFunctionApp
     {
         public override void Configure(IFunctionsHostBuilder builder)
         {
-            builder.UseAspNetConfiguration();
+            #region YellowCounter.AzureFunctions.AspNetConfiguration
+            //builder.UseAspNetConfiguration();
+            //var configuration = builder.GetConfiguration();
+            #endregion
 
-            //var configBuilder = new ConfigurationBuilder();
+            #region Stef
+            var configBuilder = new ConfigurationBuilder();
 
-            //string scriptRoot = AzureFunctionUtils.GetAzureWebJobsScriptRoot();
-            //if (!string.IsNullOrEmpty(scriptRoot))
-            //{
-            //    configBuilder.SetBasePath(scriptRoot).AddJsonFile("local.settings.json", optional: false, reloadOnChange: false);
-            //}
-            //configBuilder.AddEnvironmentVariables();
+            string scriptRoot = AzureFunctionUtils.GetAzureWebJobsScriptRoot();
+            if (!string.IsNullOrEmpty(scriptRoot))
+            {
+                configBuilder.SetBasePath(scriptRoot).AddJsonFile("local.settings.json", optional: false, reloadOnChange: false);
+            }
+            configBuilder.AddEnvironmentVariables();
 
-            var configuration = builder.GetConfiguration();
+            var configuration = configBuilder.Build();
+            #endregion
 
             // Add Services
             builder.Services.AddScoped<ISmartContractService, SmartContractService>();
