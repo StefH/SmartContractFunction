@@ -36,7 +36,7 @@ namespace Infrastructure.AzureTableStorage.Services
                 _logger.LogInformation("AzureTablesService : using ConnectionString");
                 client = CloudStorageAccount.Parse(options.Value.ConnectionString).CreateCloudTableClient();
             }
-            else if (string.IsNullOrEmpty(options.Value.SASToken) && !string.IsNullOrEmpty(options.Value.BaseUri))
+            else if (!string.IsNullOrEmpty(options.Value.SASToken) && !string.IsNullOrEmpty(options.Value.BaseUri))
             {
                 _logger.LogInformation("AzureTablesService : using BaseUri and SASToken");
                 var storageCredentials = new StorageCredentials(options.Value.SASToken);
