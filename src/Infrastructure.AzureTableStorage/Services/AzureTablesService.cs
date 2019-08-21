@@ -1,4 +1,5 @@
-﻿using AzureFunctions.Common.Validation;
+﻿using System;
+using AzureFunctions.Common.Validation;
 using Infrastructure.AzureTableStorage.Models;
 using Infrastructure.AzureTableStorage.Options;
 using JetBrains.Annotations;
@@ -7,7 +8,6 @@ using Microsoft.Extensions.Options;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Auth;
 using Microsoft.WindowsAzure.Storage.Table;
-using System;
 using WindowsAzure.Table;
 
 namespace Infrastructure.AzureTableStorage.Services
@@ -33,14 +33,20 @@ namespace Infrastructure.AzureTableStorage.Services
             CloudTableClient client;
             if (!string.IsNullOrEmpty(options.Value.ConnectionString))
             {
+                _logger.LogInformation("AzureTablesService : using ConnectionString");
                 client = CloudStorageAccount.Parse(options.Value.ConnectionString).CreateCloudTableClient();
             }
-            else
+            else if (string.IsNullOrEmpty(options.Value.SASToken) && string.IsNullOrEmpty(options.Value.BaseUri))
             {
+                _logger.LogInformation("AzureTablesService : using BaseUri and SASToken");
                 var storageCredentials = new StorageCredentials(options.Value.SASToken);
 
                 // Create CloudTableClient using the BaseUri and the StorageCredentials
                 client = new CloudTableClient(new Uri(options.Value.BaseUri), storageCredentials);
+            }
+            else
+            {
+                throw new ArgumentException("AzureTableStorageOptions is missing 'ConnectionString' or 'BaseUri' + 'SASToken'");
             }
 
             // Create table set(s)
